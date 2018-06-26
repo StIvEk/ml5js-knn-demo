@@ -1,6 +1,5 @@
 (function () {
   let video_frame;
-  let canvas;
   let knn;
 
   init();
@@ -8,7 +7,6 @@
   function init() {
     //select the elements relevant to video and capture
     video_frame = document.getElementById("myVideo");
-    canvas = document.getElementById("canvas");
     btnCat1 = document.getElementById("btnCat1");
     btnCat2 = document.getElementById("btnCat2");
     btnCat3 = document.getElementById("btnCat3");
@@ -16,16 +14,7 @@
     btnCat5 = document.getElementById("btnCat5");
     btnClasify = document.getElementById("btnClasify");
 
-
-    imcanvas = canvas.getContext("2d");
-
-    /*
-    This part of javascript code will capture frames from
-    the webcam and display on webpage.
-    */
-
-    //    obtain access to browser local system connected media ..
-
+    // obtain access to browser local system connected media
     navigator.getUserMedia = (
       //check for all available media
       //chrome
@@ -35,10 +24,8 @@
       navigator.msGetUserMedia
     );
 
-    //this will set a read-only boolean property to the obtained list of media devices
 
     if (navigator.getUserMedia) {
-      //log ... print in the JS console in browser
       console.log("Browser supports media api");
 
       //specify what type of media if required.
@@ -50,12 +37,11 @@
         // error_stream
       ).then(function(stream) {
         console.log("Streaming successful");
-        //once we have the webcam stream, we shall display it in the
-        //html video element created
-        // try {
+
         video_frame.srcObject = stream;
 
         knn = new ml5.KNNImageClassifier(5, 1, modelLoaded, video_frame);
+
         console.log('KNN: ', knn);
 
         //set up event listeners ..
@@ -72,6 +58,7 @@
     }
   }
 
+  // Capture camera image and categorize it
   function capture(knn, category) {
     console.log('Capturing...', knn, category);
     
@@ -82,6 +69,7 @@
     // console.log('Categorizing...', event.target.innerText);
   }
 
+  // Clasify current camera image by predicting its category
   function clasify() {
     console.log('Recognizing...');
 
@@ -89,18 +77,21 @@
     saveModelLocally();
   }
 
+  // Display predicted category
   function displayResult(results) {
     const predictionEl = document.getElementById('prediction');
 
     console.log(results);
 
-    predictionEl.textContent = results.classIndex;
+    predictionEl.textContent = `Cat ${results.classIndex}`;
   }
 
+  // Log message when model is loaded
   function modelLoaded() {
     console.log('Model loaded...');
   }
 
+  // Save the trained model in window.localStorage
   function saveModelLocally() {
     const c = knn.knn.classLogitsMatrices;
     const model = {
@@ -109,5 +100,9 @@
     }
 
     console.log(model);
+
+    // TODO: Save model in window.localStorage
   }
+
+  // TODO: Load model from window.localStorage
 })();
