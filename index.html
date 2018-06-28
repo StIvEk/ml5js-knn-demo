@@ -7,6 +7,7 @@
   <title>ml5js KNN demo</title>
   <link rel="stylesheet" href="bootstrap.min.css">
   <script src="ml5.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.2"></script> -->
 </head>
 
 <body bgcolor="#bdb76b">
@@ -33,6 +34,18 @@
         <div class="row">
           <button class="btn btn-success" id="btnClasify">Clasify</button>
           <span id="prediction"></span>
+        </div>
+        <div class="row">
+          <button class="btn btn-info" id="btnSave">Save model</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-warning" id="btnLoad">Load model</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-info" id="btnSaveFile">Save file</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-warning" id="btnLoadFile">Load file</button>
         </div>
       </div>
     </div>

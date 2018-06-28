@@ -13,6 +13,10 @@
     btnCat4 = document.getElementById("btnCat4");
     btnCat5 = document.getElementById("btnCat5");
     btnClasify = document.getElementById("btnClasify");
+    btnSave = document.getElementById("btnSave");
+    btnLoad = document.getElementById("btnLoad");
+    btnSaveFile = document.getElementById("btnSaveFile");
+    btnLoadFile = document.getElementById("btnLoadFile");
 
     // obtain access to browser local system connected media
     navigator.getUserMedia = (
@@ -51,6 +55,10 @@
         btnCat4.addEventListener("click", capture.bind(null, knn, 'Cat 4'));
         btnCat5.addEventListener("click", capture.bind(null, knn, 'Cat 5'));
         btnClasify.addEventListener("click", clasify);
+        btnSave.addEventListener("click", saveModel);
+        btnLoad.addEventListener("click", loadModel);
+        btnSaveFile.addEventListener("click", saveModelFile);
+        btnLoadFile.addEventListener("click", loadModelFile);
       });
 
     } else {
@@ -74,7 +82,6 @@
     console.log('Recognizing...');
 
     knn.predictFromVideo(displayResult);
-    saveModelLocally();
   }
 
   // Display predicted category
@@ -91,18 +98,51 @@
     console.log('Model loaded...');
   }
 
-  // Save the trained model in window.localStorage
-  function saveModelLocally() {
+  // Save the trained model in window.localStorag
+  function saveModel() {
     const c = knn.knn.classLogitsMatrices;
     const model = {
       logits: c,
       tensors: c.map((t) => t ? t.dataSync() : null)
     }
 
-    console.log(model);
-
-    // TODO: Save model in window.localStorage
+    localStorage.setItem('knnModel', JSON.stringify(model));
+    
+    console.log(knn.knn);
   }
 
-  // TODO: Load model from window.localStorage
+  // Load trained model from window.localStorage
+  function loadModel() {
+    const model = JSON.parse(localStorage.getItem('knnModel'));
+
+
+    // knn.knn.setClassLogitsMatrices(JSON.parse(c));
+
+    var r = model.tensors.map(function(e, n) {
+      if (e) {
+        var r = Object.keys(e).map(function(t) {
+          return e[t]
+        });
+        return ml5.dl.tensor(r, model.logits[n].shape, model.logits[n].dtype)
+      }
+      return null
+    });
+    knn.hasAnyTrainedClass = true;
+    knn.knn.setClassLogitsMatrices(r);
+
+    console.log(knn.knn);
+  }
+
+  function saveModelFile() {
+    knn.save();
+    
+    console.log(knn.knn);
+  }
+
+  // Load trained model from window.localStorage
+  function loadModelFile() {
+    knn.load('1530174444835.json');
+
+    console.log(knn.knn);
+  }
 })();
